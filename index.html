@@ -14,6 +14,9 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://greatdividehotshot.com">
   <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://greatdividehotshot.com/truck.jpg">
+  <meta property="og:image:alt" content="Great Divide Hotshot's 2004 Dodge Ram 3500 dually with a 30-foot flatbed trailer with 6-foot mega ramps.">
+  <meta name="twitter:card" content="summary_large_image">
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -23,6 +26,7 @@
     "name": "Great Divide Hotshot",
     "description": "Flatbed hotshot freight serving all 48 contiguous states. USDOT 4553555, MC 1808780.",
     "url": "https://greatdividehotshot.com",
+    "image": "https://greatdividehotshot.com/truck.jpg",
     "telephone": "+1-406-850-1180",
     "email": "jlaustill@greatdividehotshot.com",
     "address": {
@@ -148,6 +152,25 @@
 
     .equip-list strong {
       color: #1e293b;
+    }
+
+    .equip-photo {
+      margin-top: 20px;
+    }
+
+    .equip-photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .equip-photo figcaption {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 8px;
+      text-align: center;
     }
 
     /* Service area */
@@ -297,9 +320,17 @@
       <div class="section-label">Equipment</div>
       <ul class="equip-list">
         <li><strong>Truck:</strong> 2004 Dodge Ram 3500 &mdash; Diesel, 30,000 lb GCWR</li>
-        <li><strong>Trailer:</strong> 36&rsquo; Gooseneck Flatbed &mdash; Tandem Axle</li>
+        <li><strong>Trailer:</strong> 30&rsquo; + 6&rsquo; Mega Ramps Flatbed &mdash; Tandem Axle</li>
         <li><strong>Capacity:</strong> 30,000 lbs Registered Gross Vehicle Weight</li>
       </ul>
+      <figure class="equip-photo">
+        <picture>
+          <source srcset="truck.webp" type="image/webp">
+          <img src="truck.jpg" width="1400" height="1050" loading="lazy"
+               alt="Great Divide Hotshot's 2004 Dodge Ram 3500 dually hitched to a 30-foot flatbed trailer with 6-foot mega ramps, loaded and ready to haul, in Helena, Montana.">
+        </picture>
+        <figcaption>Our 2004 Dodge Ram 3500 and 30&rsquo; + 6&rsquo; mega ramps flatbed &mdash; the rig hauling your freight.</figcaption>
+      </figure>
     </section>
 
     <section class="section section-alt" aria-label="Service Area">
