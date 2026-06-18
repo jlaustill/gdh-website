@@ -198,6 +198,46 @@
       letter-spacing: 0.5px;
     }
 
+    /* Partnerships */
+    .partner-logos {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px 44px;
+    }
+
+    .partner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .partner-logo {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    .partner-cap {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .partner-note {
+      font-size: 14px;
+      color: #475569;
+      margin-top: 20px;
+    }
+
+    .partner-note strong {
+      color: #1e293b;
+    }
+
     /* Footer / Contact */
     footer {
       background: #1e293b;
@@ -340,6 +380,28 @@
         <span class="badge">IRP Apportioned</span>
         <span class="badge">IFTA Licensed</span>
       </div>
+    </section>
+
+    <section class="section" aria-label="Partnerships and Coverage">
+      <div class="section-label">Partnerships &amp; Coverage</div>
+      <div class="partner-logos">
+        <figure class="partner">
+          <img src="logos/otr.svg" alt="OTR Solutions" class="partner-logo" width="154" height="52" loading="lazy">
+          <figcaption class="partner-cap">Factoring</figcaption>
+        </figure>
+        <figure class="partner">
+          <img src="logos/progressive.svg" alt="Progressive Commercial" class="partner-logo" loading="lazy">
+          <figcaption class="partner-cap">Insurance</figcaption>
+        </figure>
+        <figure class="partner">
+          <img src="logos/ooida.svg" alt="OOIDA &mdash; Owner-Operator Independent Drivers Association" class="partner-logo" loading="lazy">
+          <figcaption class="partner-cap">Member</figcaption>
+        </figure>
+      </div>
+      <p class="partner-note">
+        We factor through <strong>OTR Solutions</strong>; all payments route through OTR&rsquo;s
+        Notice of Assignment. Please confirm your brokerage can work with an OTR NOA before booking.
+      </p>
     </section>
   </main>
 
