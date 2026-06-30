@@ -18,9 +18,14 @@ Configure GPSLogger (Mendhak) → **Logging details → Log to custom URL**:
 
 ## Performance / battery settings
 
-- **Time between fixes:** 60 seconds (or more) — keeps writes well within free tier.
-- **Distance filter:** set a minimum distance (e.g. 100 m) so a parked truck stops
-  posting. Writes only happen while moving.
+Found under GPSLogger's **Performance** section. Label names vary by app version:
+
+- **Logging interval** (some versions call this "time between fixes"): **60 seconds**
+  or more — keeps writes well within free tier.
+- **Distance filter** ("log only if moved N meters"): set a minimum distance
+  (e.g. 100 m) so a parked truck stops posting. Writes only happen while moving.
+- **Passive locations update interval:** leave at the default (off). It only reuses
+  locations other apps request; not needed here.
 - Offline points are queued and sent when signal returns.
 
 ## Rotating the token
