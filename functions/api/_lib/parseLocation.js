@@ -1,3 +1,12 @@
+export function repairEmptyValues(jsonText) {
+  // GPSLogger replaces unavailable placeholders (e.g. speed/bearing when the
+  // device is stationary) with an empty string, producing invalid JSON like
+  // {"spd":,"dir":}. Replace any value left empty before a comma or closing
+  // brace with null so the body parses. A real number never sits directly
+  // before a comma/brace, so valid bodies are unaffected.
+  return jsonText.replace(/:(\s*)([,}])/g, ":null$1$2");
+}
+
 function toFiniteNumberOrNull(value) {
   if (value === null || value === undefined || value === "") {
     return null;
