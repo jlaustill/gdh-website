@@ -49,6 +49,8 @@
   }
   </script>
 
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -322,6 +324,60 @@
         padding: 32px 20px;
       }
     }
+
+    /* Truck location map */
+    .map-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .range-preset {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d4ed8;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+
+    .range-preset[aria-pressed="true"] {
+      color: #ffffff;
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .map-range {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 12px;
+    }
+
+    .map-range input {
+      font: inherit;
+      margin-left: 6px;
+    }
+
+    .truck-map {
+      height: 360px;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .map-status {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 10px;
+      min-height: 1.2em;
+    }
   </style>
 </head>
 <body>
@@ -407,6 +463,22 @@
         Notice of Assignment. Please confirm your brokerage can work with an OTR NOA before booking.
       </p>
     </section>
+
+    <section class="section section-alt" aria-label="Truck Location">
+      <div class="section-label">Where&rsquo;s the Truck</div>
+      <div class="map-controls" id="map-controls">
+        <button type="button" class="range-preset" data-preset="today" aria-pressed="true">24 Hours</button>
+        <button type="button" class="range-preset" data-preset="7days" aria-pressed="false">7 Days</button>
+        <button type="button" class="range-preset" data-preset="30days" aria-pressed="false">30 Days</button>
+        <button type="button" class="range-preset" data-preset="all" aria-pressed="false">All</button>
+      </div>
+      <div class="map-range">
+        <label>From <input type="datetime-local" id="range-start"></label>
+        <label>To <input type="datetime-local" id="range-end"></label>
+      </div>
+      <div id="truck-map" class="truck-map"></div>
+      <p class="map-status" id="map-status">Loading location&hellip;</p>
+    </section>
   </main>
 
   <footer>
@@ -424,5 +496,7 @@
   </footer>
 
   <script src="age.js" defer></script>
+  <script src="vendor/leaflet/leaflet.js" defer></script>
+  <script type="module" src="location-map.js"></script>
 </body>
 </html>
