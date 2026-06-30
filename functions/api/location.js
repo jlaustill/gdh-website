@@ -8,13 +8,12 @@ export async function onRequestPost(context) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const rawBody = await request.text();
-
   let payload;
   try {
-    payload = JSON.parse(rawBody);
+    payload = await request.json();
   } catch {
-    console.error("Invalid JSON body:", rawBody);
+    // Reason only — never log the body, which contains geolocation PII.
+    console.error("Rejected location POST: malformed JSON body");
     return new Response("Invalid JSON", { status: 400 });
   }
 
@@ -22,7 +21,8 @@ export async function onRequestPost(context) {
   try {
     row = parseLocationBody(payload);
   } catch (error) {
-    console.error("Rejected location body:", error.message, "raw:", rawBody);
+    // error.message is a fixed validation string, not request data.
+    console.error("Rejected location POST:", error.message);
     return new Response(error.message, { status: 400 });
   }
 
