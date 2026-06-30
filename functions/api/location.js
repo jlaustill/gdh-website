@@ -15,7 +15,8 @@ export async function onRequestPost(context) {
     // Tolerate empty placeholders (e.g. speed/bearing while stationary).
     payload = JSON.parse(repairEmptyValues(rawBody));
   } catch {
-    console.error("Rejected location POST (invalid JSON):", rawBody);
+    // Log the reason only — never request data.
+    console.error("Rejected location POST: invalid JSON body");
     return new Response("Invalid JSON", { status: 400 });
   }
 
@@ -23,7 +24,8 @@ export async function onRequestPost(context) {
   try {
     row = parseLocationBody(payload);
   } catch (error) {
-    console.error("Rejected location POST:", error.message, rawBody);
+    // error.message is a fixed validation string, not request data.
+    console.error("Rejected location POST:", error.message);
     return new Response(error.message, { status: 400 });
   }
 

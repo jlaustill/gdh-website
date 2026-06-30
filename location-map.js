@@ -1,4 +1,7 @@
-import { presetToRange, buildLocationsUrl } from "./location-range.js";
+import { presetToRange, buildLocationsUrl, formatRelative } from "./location-range.js";
+
+const REFRESH_MS = 60000; // refetch the active view every minute
+const TICK_MS = 30000; // re-render the "last seen" label between fetches
 
 const L = window.L;
 const HELENA = [46.5891, -112.0391]; // fallback view: home base
@@ -15,6 +18,10 @@ const startInput = document.getElementById("range-start");
 const endInput = document.getElementById("range-end");
 const statusEl = document.getElementById("map-status");
 const presetButtons = Array.from(document.querySelectorAll(".range-preset"));
+
+let activePreset = "today"; // null when a manual range is in effect
+let latestRecordedAt = null;
+let latestPointCount = 0;
 
 function toInputValue(date) {
   // datetime-local needs local "YYYY-MM-DDTHH:mm"
@@ -39,9 +46,19 @@ function arrowIcon(headingDegrees) {
   });
 }
 
-function render(points) {
+function updateStatus() {
+  if (!latestRecordedAt) {
+    return;
+  }
+  const relative = formatRelative(latestRecordedAt, new Date());
+  const noun = latestPointCount === 1 ? "point" : "points";
+  statusEl.textContent = `Last seen ${relative} · ${latestPointCount} ${noun}`;
+}
+
+function render(points, fitView) {
   trailLayer.clearLayers();
   if (points.length === 0) {
+    latestRecordedAt = null;
     statusEl.textContent = "No location data for this range.";
     return;
   }
@@ -52,24 +69,44 @@ function render(points) {
   const last = points[points.length - 1];
   L.marker([last.latitude, last.longitude], { icon: arrowIcon(last.heading) }).addTo(trailLayer);
 
-  map.fitBounds(latLngs, { padding: [30, 30], maxZoom: 12 });
-  const when = new Date(last.recorded_at).toLocaleString();
-  statusEl.textContent = `Last update: ${when} (${points.length} points)`;
+  if (fitView) {
+    map.fitBounds(latLngs, { padding: [30, 30], maxZoom: 12 });
+  }
+
+  latestRecordedAt = new Date(last.recorded_at);
+  latestPointCount = points.length;
+  updateStatus();
 }
 
-async function load(start, end) {
+async function load(start, end, fitView = true) {
   startInput.value = toInputValue(start);
   endInput.value = toInputValue(end);
-  statusEl.textContent = "Loading location…";
+  if (!latestRecordedAt) {
+    statusEl.textContent = "Loading location…";
+  }
   try {
     const response = await fetch(buildLocationsUrl(start, end));
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
     const data = await response.json();
-    render(data.points || []);
+    render(data.points || [], fitView);
   } catch (error) {
     statusEl.textContent = `Could not load location (${error.message}).`;
+  }
+}
+
+function refresh() {
+  // Re-fetch the current view without disturbing the map's pan/zoom.
+  if (activePreset) {
+    const { start, end } = presetToRange(activePreset, new Date());
+    load(start, end, false);
+    return;
+  }
+  const start = new Date(startInput.value);
+  const end = new Date(endInput.value);
+  if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())) {
+    load(start, end, false);
   }
 }
 
@@ -81,13 +118,15 @@ function setActivePreset(preset) {
 
 presetButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    setActivePreset(button.dataset.preset);
-    const { start, end } = presetToRange(button.dataset.preset, new Date());
+    activePreset = button.dataset.preset;
+    setActivePreset(activePreset);
+    const { start, end } = presetToRange(activePreset, new Date());
     load(start, end);
   });
 });
 
 function onManualRangeChange() {
+  activePreset = null;
   setActivePreset(null);
   const start = new Date(startInput.value);
   const end = new Date(endInput.value);
@@ -100,6 +139,8 @@ function onManualRangeChange() {
 startInput.addEventListener("change", onManualRangeChange);
 endInput.addEventListener("change", onManualRangeChange);
 
-// Initial view: last 24 hours
+// Initial view: last 24 hours, then keep it live.
 const initial = presetToRange("today", new Date());
 load(initial.start, initial.end);
+setInterval(refresh, REFRESH_MS);
+setInterval(updateStatus, TICK_MS);

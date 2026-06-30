@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { presetToRange, buildLocationsUrl } from "../location-range.js";
+import { presetToRange, buildLocationsUrl, formatRelative } from "../location-range.js";
 
 const NOW = new Date("2026-06-30T12:00:00.000Z");
 
@@ -24,6 +24,30 @@ describe("presetToRange", () => {
     const { start, end } = presetToRange("all", NOW);
     expect(start.getTime()).toBe(0);
     expect(end.toISOString()).toBe("2026-06-30T12:00:00.000Z");
+  });
+});
+
+describe("formatRelative", () => {
+  const now = new Date("2026-06-30T12:00:00.000Z");
+
+  it("returns 'just now' under 45 seconds", () => {
+    expect(formatRelative(new Date("2026-06-30T11:59:30.000Z"), now)).toBe("just now");
+  });
+
+  it("returns a singular minute", () => {
+    expect(formatRelative(new Date("2026-06-30T11:59:00.000Z"), now)).toBe("1 minute ago");
+  });
+
+  it("returns plural minutes", () => {
+    expect(formatRelative(new Date("2026-06-30T11:57:00.000Z"), now)).toBe("3 minutes ago");
+  });
+
+  it("returns hours", () => {
+    expect(formatRelative(new Date("2026-06-30T09:00:00.000Z"), now)).toBe("3 hours ago");
+  });
+
+  it("returns days", () => {
+    expect(formatRelative(new Date("2026-06-27T12:00:00.000Z"), now)).toBe("3 days ago");
   });
 });
 
