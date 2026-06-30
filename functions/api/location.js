@@ -8,10 +8,13 @@ export async function onRequestPost(context) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const rawBody = await request.text();
+
   let payload;
   try {
-    payload = await request.json();
+    payload = JSON.parse(rawBody);
   } catch {
+    console.error("Invalid JSON body:", rawBody);
     return new Response("Invalid JSON", { status: 400 });
   }
 
@@ -19,6 +22,7 @@ export async function onRequestPost(context) {
   try {
     row = parseLocationBody(payload);
   } catch (error) {
+    console.error("Rejected location body:", error.message, "raw:", rawBody);
     return new Response(error.message, { status: 400 });
   }
 
